@@ -1,0 +1,6 @@
+<div id="slot-machine">
+  <div class="reel" *ngFor="let reel of reels">
+    <div class="symbol" *ngFor="let symbol of reel.symbols" [style.backgroundColor]="symbol.color"></div>
+  </div>
+</div>
+<button (click)="start()">Start</button>  <button (click)="stop()">Stop</button>

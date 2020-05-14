@@ -1,40 +1,57 @@
+$slot-column-margin: 7px;
+$number-of-reels: 5;
+$number-of-rows: 5;
+
 #slot-machine {
     background-color: black;
-    margin-left: 2vmax;
+    margin-left: 2vw;
     margin-top: 10vh;
-    width: 96vmax;
-    height: 50vmax;
+    width: 96vw;
+    height: 50vw;
+    max-height: 80vh;
     position: absolute;
     display: flex;
     justify-content: space-between;
     border-radius: 3px;
     overflow: hidden;
     border-style: solid;
-    border-width: 1vmax;
+    border-width: $slot-column-margin;
     box-sizing: border-box;
 }
 
 .reel {
-    width: 18.5vmax;
+    width: calc((96vw - ((#{$number-of-reels} + 1) * #{$slot-column-margin})) / #{$number-of-reels});
     background-color: white;
-    height: 72vmax;
-    margin-top: 0vmax;
+    height: calc(72vw - (2 * #{$slot-column-margin}));
+    max-height: calc(120vh - (2 * #{$slot-column-margin}));
+    margin-top: 0vw;
     float: left;
     overflow: hidden;
     position: relative;
 }
 
+.reel-glass {
+    position: absolute;
+    height: calc(50vw - (2 * #{$slot-column-margin}));
+    max-height: calc(80vh - (2 * #{$slot-column-margin}));
+    width: 100%;
+    box-shadow: inset 0 0 5px black;
+    background-image: linear-gradient(rgba(0,0,0,0.25) 0%, rgba(255,255,255, 0) 20%, rgba(255,255,255, 0) 80%, rgba(0,0,0,0.25) 100%);
+}
+
 .symbol {
     width: 100%;
-    height: 9.6vmax;
+    height: calc((50vw - (2 * #{$slot-column-margin})) / #{$number-of-rows});
+    max-height: calc((80vh - (2 * #{$slot-column-margin})) / #{$number-of-rows});
     position: relative;
     float: left;
-    border-color: red;
+    border-color: grey;
     border-width: 2px;
     border-style: solid;
+    border-left-style: none;
+    border-right-style: none;
     box-sizing: border-box;
-
-    animation: insert-symbol 0.1s linear;
+    animation: insert-symbol 0.08s linear;
 }
 
 .new-symbol {
@@ -44,9 +61,9 @@
 
 @keyframes insert-symbol {
     0% {
-        height: 0vmax;
+        height: 0vw;
     }
     100% {
-        height: 9.6vmax;
+        height: 9.6vw;
     }
 }

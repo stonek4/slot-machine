@@ -45,17 +45,20 @@ export class SymbolsService {
       id = this.luckyRareSymbolId;
     } else if (random < 83) {
       id = random % 4;
-    } else if (random < 98) {
+    } else if (random < 99) {
       id = random % 4 + 4;
     } else {
       id = 8;
     }
   
-    if (this.luckySpin && id < 4) {
-      id += 1;
-      if (this.superLuckySpin && id < 7) {
+    if (this.superLuckySpin && id < 8) {
+      if (id <= 3) {
+        id += 4;
+      } else {
         id += 1;
       }
+    } else if (this.luckySpin && id < 4) {
+      id += 1;
     }
 
   
@@ -65,55 +68,55 @@ export class SymbolsService {
   symbols: Object = {
       '0': new Symbol({
           'id': "0",
-          'styleClass': "symbol-basic",
+          'styleClass': "symbol-common",
           'picture': "assets/img/jack.png",
           'value': 1,
       }),
       '1': new Symbol({
           'id': "1",
-          'styleClass': "symbol-basic",
+          'styleClass': "symbol-common",
           'picture': "assets/img/queen.png",
           'value': 2,
       }),
       '2': new Symbol({
           'id': "2",
-          'styleClass': "symbol-basic",
+          'styleClass': "symbol-common",
           'picture': "assets/img/king.png",
           'value': 3,
       }),
       '3': new Symbol({
           'id': "3",
-          'styleClass': "symbol-basic",
+          'styleClass': "symbol-common",
           'picture': "assets/img/ace.png",
           'value': 4,
       }),
       '4': new Symbol({
           'id': "4",
-          'styleClass': "symbol-yellow",
+          'styleClass': "symbol-rare symbol-yellow",
           'picture': "assets/img/potato.png",
           'value': 5,
       }),
       '5': new Symbol({
           'id': "5",
-          'styleClass': "symbol-orange",
+          'styleClass': "symbol-rare symbol-orange",
           'picture': "assets/img/carrot.png",
           'value': 10,
       }),
       '6': new Symbol({
           'id': "6",
-          'styleClass': "symbol-pink",
+          'styleClass': "symbol-rare symbol-pink",
           'picture': "assets/img/broccoli.png",
           'value': 20,
       }),
       '7': new Symbol({
           'id': "7",
-          'styleClass': "symbol-teal",
+          'styleClass': "symbol-rare symbol-teal",
           'picture': "assets/img/beets.png",
           'value': 50,
       }),
       '8': new Symbol({
           'id': "8",
-          'styleClass': "symbol-rainbow",
+          'styleClass': "symbol-jackpot symbol-rainbow",
           'picture': "assets/img/onion.png",
           'value': 100,
       })
@@ -125,6 +128,7 @@ export class Symbol {
   public id: string;
   public styleClass: string;
   public value: number;
+  public won: boolean = false;
 
   constructor(data: Partial<Symbol>){
       Object.assign(this, data);

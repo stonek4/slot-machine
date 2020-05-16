@@ -65,15 +65,21 @@ export class AppComponent {
     let newWinnings: number = 0;
     for (let payline of this.paylineComponents) {
       let symbol: Symbol = undefined;
+      let winningSymbols = []
       for (let i = 0; i < this.numberOfReels; i++) {
         const paylineIndex: number = payline.winningRows[i];
         if (symbol === undefined) {
           symbol = this.reels[i].symbols[paylineIndex];
         } else if (symbol.id !== this.reels[i].symbols[paylineIndex].id) {
           break;
-        }
+        } 
+
+        winningSymbols.push(this.reels[i].symbols[paylineIndex]);
 
         if (i === this.numberOfReels - 1) {
+          for (let winningSymbol of winningSymbols) {
+            winningSymbol.won = true;
+          }
           this.stats[parseInt(symbol.id)] += 1;
           payline.show();
           setTimeout(() => {
@@ -81,6 +87,21 @@ export class AppComponent {
           }, 5000);
           newWinnings += (5 * symbol.value) + 3;
         }
+      }
+    }
+    let jackpotSymbols = 0;
+    let winningSymbols = [];
+    for (let i = 0; i < this.numberOfReels; i++) {
+      for (let j = 0; j < this.numberOfRows; j++) {
+        if (this.reels[i].symbols[j].id === "8") {
+          jackpotSymbols += 1;
+          winningSymbols.push(this.reels[i].symbols[j]);
+        }
+      }
+    }
+    if (jackpotSymbols >= 3) {
+      for (let winningSymbol of winningSymbols) {
+        winningSymbol.won = true;
       }
     }
     this.winnings += newWinnings;

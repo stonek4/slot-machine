@@ -1,7 +1,7 @@
 <div id="slot-machine">
   <div class="reel" *ngFor="let reel of reels">
     <div *ngFor="let symbol of reel.symbols" [className]="'symbol ' + symbol.styleClass">
-      <img class="symbol-image" [src]="symbol.picture" />
+      <img [className]="'symbol-image ' + (symbol.won ? 'symbol-image-won' : '')" [src]="symbol.picture" />
     </div>
     <div [className]="'reel-glass ' + (symbolsService.superLuckySpin ? 'reel-super-lucky ' : '') + (symbolsService.luckySpin ? 'reel-lucky' : '')"></div>
   </div>

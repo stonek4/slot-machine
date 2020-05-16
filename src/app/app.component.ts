@@ -23,7 +23,7 @@ export class AppComponent {
 
   @ViewChildren(PaylineComponent) paylineComponents: QueryList<PaylineComponent>;
 
-  constructor(private symbolsService: SymbolsService) {
+  constructor(public symbolsService: SymbolsService) {
     for (let i = 0; i < this.numberOfReels; i++) {
       const symbols = new Array<Symbol>();
       for (let j = 0; j < this.numberOfSymbols; j++) {

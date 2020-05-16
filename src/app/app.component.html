@@ -1,9 +1,9 @@
 <div id="slot-machine">
   <div class="reel" *ngFor="let reel of reels">
-    <div *ngFor="let symbol of reel.symbols" [className]="'symbol ' +symbol.styleClass">
+    <div *ngFor="let symbol of reel.symbols" [className]="'symbol ' + symbol.styleClass">
       <img class="symbol-image" [src]="symbol.picture" />
     </div>
-    <div class="reel-glass"></div>
+    <div [className]="'reel-glass ' + (symbolsService.superLuckySpin ? 'reel-super-lucky ' : '') + (symbolsService.luckySpin ? 'reel-lucky' : '')"></div>
   </div>
   <div style="height: 100%; width: 100%; position: absolute">
     <svg style="position: absolute" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" app-payline *ngFor="let payline of paylineValues" [winningRows]="payline" [totalRows]="numberOfRows"></svg>

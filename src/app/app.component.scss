@@ -36,7 +36,24 @@ $number-of-rows: 5;
     max-height: calc(80vh - (2 * #{$slot-column-margin}));
     width: 100%;
     box-shadow: inset 0 0 5px black;
+    border-style: none;
     background-image: linear-gradient(rgba(0,0,0,0.25) 0%, rgba(255,255,255, 0) 20%, rgba(255,255,255, 0) 80%, rgba(0,0,0,0.25) 100%);
+}
+
+.reel-border {
+    box-sizing: border-box;
+    border-style: solid;
+    border-width: $slot-column-margin;
+}
+
+.reel-lucky {
+    @extend .reel-border;
+    animation: flash-silver 2s linear infinite;
+}
+
+.reel-super-lucky {
+    @extend .reel-border;
+    animation: flash-gold 2s linear infinite;
 }
 
 .symbol {
@@ -100,5 +117,29 @@ $number-of-rows: 5;
     }
     100% {
         height: 9.6vw;
+    }
+}
+
+@keyframes flash-silver {
+    0% {
+        border-color: rgba(0,0,0,0);
+    }
+    50% {
+        border-color: silver;
+    }
+    100% {
+        border-color: rgba(0,0,0,0);
+    }
+}
+
+@keyframes flash-gold {
+    0% {
+        border-color: rgba(0,0,0,0);
+    }
+    50% {
+        border-color: gold;
+    }
+    100% {
+        border-color: rgba(0,0,0,0);
     }
 }

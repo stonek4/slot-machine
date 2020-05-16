@@ -78,7 +78,7 @@ export class AppComponent {
           payline.show();
           setTimeout(() => {
             payline.hide();
-          }, 2000);
+          }, 5000);
           newWinnings += (5 * symbol.value) + 3;
         }
       }
@@ -87,7 +87,7 @@ export class AppComponent {
   }
 
   takePayment() {
-    this.winnings -= 5;
+    this.winnings -= 30;
   }
 
   startStop(): void {
@@ -98,11 +98,16 @@ export class AppComponent {
     } else {
       this.takePayment();
       this.symbolsService.rollLuckySpin();
-      for (let reel of this.reels) {
-        this.spin(reel);
+      for (let payline of this.paylineComponents) {
+        payline.hide();
       }
-      this.spinning = true;
-      this.stats[5] += 1;
+      setTimeout(() => {
+        for (let reel of this.reels) {
+          this.spin(reel);
+        }
+        this.spinning = true;
+        this.stats[8] += 1;
+      });
     }
   }
 

@@ -1,7 +1,7 @@
 import { Component, ViewChildren, QueryList } from '@angular/core';
 import { PaylineComponent } from './payline/payline.component';
 import { paylines } from './paylines';
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
+import { SymbolsService, Symbol } from './symbols.service'
 
 @Component({
   selector: 'app-root',
@@ -15,24 +15,19 @@ export class AppComponent {
   numberOfSymbols = this.numberOfRows + 1;
   reels = new Array<Reel>();
   spinning = false;
+  stopping = false;
   stopIndex = 0;
   paylineValues = paylines;
-  winnings = 50;
+  winnings = 1000;
+  stats = [0,0,0,0,0,0,0,0,0,0];
+
   @ViewChildren(PaylineComponent) paylineComponents: QueryList<PaylineComponent>;
 
-  constructor() {
+  constructor(private symbolsService: SymbolsService) {
     for (let i = 0; i < this.numberOfReels; i++) {
       const symbols = new Array<Symbol>();
       for (let j = 0; j < this.numberOfSymbols; j++) {
-        const id = this.getRandomNumber();
-        const color = this.getColor(id);
-
-        symbols.push(new Symbol({
-          id: id.toString(),
-          color: color,
-          picture: j.toString(),
-          value: id
-        }))
+        symbols.push(this.symbolsService.getNewSymbol());
       }
       this.reels.push(new Reel({
         symbols: symbols,
@@ -41,42 +36,11 @@ export class AppComponent {
     }
   }
 
-  getColor(index: number) {
-    switch(index) {
-      case 0: {
-        return "white";
-      }
-      case 1: {
-        return "blue";
-      }
-      case 2: {
-        return "green";
-      }
-      case 3: {
-        return "yellow";
-      }
-      case 4: {
-        return "purple";
-      }
-    }
-  }
-
-  getRandomNumber() {
-    return Math.floor(Math.random() * 4);
-  }
-
   spin(reel: Reel): void {
     window.requestAnimationFrame(() => {
       setTimeout(() => {
-        const id = this.getRandomNumber();
-        const color = this.getColor(id);
         reel.symbols.pop();
-        reel.symbols.unshift(new Symbol({
-          id: id.toString(),
-          color: color,
-          picture: "hi",
-          value: id
-        }));
+        reel.symbols.unshift(this.symbolsService.getNewSymbol());
         if (this.spinning) {
           this.spin(reel);
         } else {
@@ -87,6 +51,7 @@ export class AppComponent {
 
             if (this.stopIndex === this.numberOfReels - 1) {
               this.checkForWin();
+              this.stopping = false;
             }
           } else {
             this.spin(reel);
@@ -109,12 +74,12 @@ export class AppComponent {
         }
 
         if (i === this.numberOfReels - 1) {
-          console.log(`WINNER! ${payline.winningRows}`);
+          this.stats[parseInt(symbol.id)] += 1;
           payline.show();
           setTimeout(() => {
             payline.hide();
           }, 2000);
-          newWinnings += (1 + symbol.value) * 5;
+          newWinnings += (5 * symbol.value) + 3;
         }
       }
     }
@@ -122,25 +87,32 @@ export class AppComponent {
   }
 
   takePayment() {
-    this.winnings -= 1;
+    this.winnings -= 5;
   }
 
-  start(): void {
-    this.takePayment();
-    this.spinning = true;
-
-    for (let reel of this.reels) {
-      this.spin(reel);
+  startStop(): void {
+    if (this.spinning) {
+      this.stopIndex = 0;
+      this.stopping = true;
+      this.spinning = false;
+    } else {
+      this.takePayment();
+      this.symbolsService.rollLuckySpin();
+      for (let reel of this.reels) {
+        this.spin(reel);
+      }
+      this.spinning = true;
+      this.stats[5] += 1;
     }
   }
 
-  stop(): void {
-    this.stopIndex = 0;
-    this.spinning = false; 
-  }
-
   ngOnInit(): void {
-    
+    // setInterval(() => {
+    //   this.startStop();
+    //   if (this.stats[5] % 100 === 0) {
+    //     console.log(this.stats);
+    //   }
+    // }, 2000);
   }
 }
 
@@ -152,17 +124,5 @@ class Reel {
     Object.assign(this, data);
   }
 }
-
-class Symbol {
-  public picture: string;
-  public id: string;
-  public color: string;
-  public value: number;
-
-  constructor(data: Partial<Symbol>){
-    Object.assign(this, data);
-  }
-}
-
 
 

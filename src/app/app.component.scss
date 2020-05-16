@@ -51,12 +51,47 @@ $number-of-rows: 5;
     border-left-style: none;
     border-right-style: none;
     box-sizing: border-box;
-    animation: insert-symbol 0.08s linear;
+    animation: insert-symbol 0.080s linear;
+    overflow: hidden;
+}
+
+.symbol-basic {
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 5%, rgb(181, 181, 181) 100%);
+}
+
+.symbol-rainbow {
+    background: radial-gradient(circle, rgba(36,18,0,1) 0%, rgba(121,9,109,1) 17%, rgba(6,174,161,1) 51%, rgba(4,197,16,1) 61%, rgba(198,152,12,1) 73%, rgba(191,199,8,1) 86%, rgba(255,0,0,1) 100%);
+}
+
+.symbol-teal {
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 5%, rgba(0,255,239,1) 100%);
+}
+
+.symbol-pink {
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 5%, rgba(255,0,241,1) 100%);
+}
+
+.symbol-yellow {
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 5%, rgba(245,255,0,1) 100%);
+}
+
+.symbol-orange {
+    background: radial-gradient(circle, rgb(255, 255, 255) 0%, rgb(255, 255, 255) 5%, rgb(255, 208, 68) 100%);
+}
+
+.symbol-image {
+    height: calc((50vw - (8 * #{$slot-column-margin})) / #{$number-of-rows});
+    max-height: calc((80vh - (8 * #{$slot-column-margin})) / #{$number-of-rows});
+    margin: auto;
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
 }
 
 .new-symbol {
     @extend .symbol;
-    animation: insert-symbol 1s;
+    animation: insert-symbol 0.080s;
 }
 
 @keyframes insert-symbol {

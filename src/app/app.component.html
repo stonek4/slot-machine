@@ -10,5 +10,6 @@
   </div>
 </div>
 <div id="betting-section">
-  <button (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : "Start"}}</button> <p>{{winnings}}</p>
+  <button id="spin-button" (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : "Start"}}</button> 
+  <p id="winnings">{{winnings}}</p>
 </div>

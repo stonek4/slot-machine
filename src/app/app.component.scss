@@ -5,14 +5,15 @@ $number-of-rows: 5;
 #slot-machine {
     background: linear-gradient(0deg, rgba(143,143,143,1) 0%, rgba(62,62,62,1) 50%, rgba(247,247,247,1) 100%);
     margin-left: 2vw;
-    margin-top: 5vh;
+    margin-top: 2.5vh;
     width: 96vw;
-    height: 50vw;
-    max-height: 80vh;
+    height: calc(50vw - 2px);
+    max-height: calc(80vh - 2px);
     position: relative;
     display: flex;
     justify-content: space-between;
-    border-radius: 3px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
     overflow: hidden;
     border-style: solid;
     border-bottom-color: rgba(143,143,143,1);
@@ -27,17 +28,43 @@ $number-of-rows: 5;
 
 #betting-section {
     position: relative;
-    width: 80vw;
-    margin-left: 10vw;
+    width: 96vw;
+    margin-left: 2vw;
     height: 15vh;
-    background-color: black;
-    margin-top: 0vh;
+    box-sizing: border-box;
+    background: linear-gradient(0deg, rgba(143,143,143,1) 0%, rgba(200,200,200,1) 15%, rgba(210,210,210,1) 50%, rgba(200,200,200,1) 85%, rgba(143,143,143,1) 100%);
+    border-left: 2px solid;
+    border-right: 2px solid;
+    border-top: 1px solid;
+    border-color: rgba(143,143,143,1);
+    padding-left: 10vh;
+    padding-right: 10vh;
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+#winnings {
+    position: absolute;
+    color: white;
+}
+
+#spin-button {
+    position: relative;
+    float: right;
+    margin-top: $slot-column-margin;
+    height: calc((15vh) - (2 * #{$slot-column-margin}));
+    width: calc(2 * ((15vh) - (2 * #{$slot-column-margin})));
+    right: $slot-column-margin;
+    // border-radius: $slot-column-margin;
+    border-style: solid;
+    border-width: $slot-column-margin;
+    border-image: linear-gradient(45deg, rgba(143,143,143,1), rgba(200,200,200,1)) 1;
 }
 
 .reel {
     width: calc((96vw - ((#{$number-of-reels} + 1) * #{$slot-column-margin})) / #{$number-of-reels});
     background-color: white;
-    height: calc(72vw - (2 * #{$slot-column-margin}));
+    height: calc(72vw - (2 * #{$slot-column-margin}) - 10px);
     max-height: calc(120vh - (2 * #{$slot-column-margin}));
     margin-top: 0vw;
     float: left;

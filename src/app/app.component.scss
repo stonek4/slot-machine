@@ -3,7 +3,7 @@ $number-of-reels: 5;
 $number-of-rows: 5;
 
 #slot-machine {
-    background-color: black;
+    background: linear-gradient(0deg, rgba(143,143,143,1) 0%, rgba(62,62,62,1) 50%, rgba(247,247,247,1) 100%);
     margin-left: 2vw;
     margin-top: 5vh;
     width: 96vw;
@@ -15,6 +15,12 @@ $number-of-rows: 5;
     border-radius: 3px;
     overflow: hidden;
     border-style: solid;
+    border-bottom-color: rgba(143,143,143,1);
+    border-top-color: rgba(247,247,247,1);
+    border-left-style: none;
+    border-right-style: none;
+    padding-left: $slot-column-margin;
+    padding-right: $slot-column-margin;
     border-width: $slot-column-margin;
     box-sizing: border-box;
 }

@@ -11,5 +11,5 @@
 </div>
 <div id="betting-section">
     <button id="spin-button" [className]="spinning ? 'stop-button' : 'start-button'" (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : (this.stopping ? "" : "Start")}}</button> 
-    <p id="winnings">{{getWinningsString()}}</p>
+    <p id="winnings-label">$</p><p id="winnings">{{getWinningsString()}}</p>
 </div>

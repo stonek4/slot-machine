@@ -1,14 +1,14 @@
 import { Component, OnInit, Input } from '@angular/core';
 
 @Component({
-  selector: '[app-payline]',
+  selector: '[lib-payline]',
   templateUrl: './payline.component.html',
   styleUrls: ['./payline.component.scss']
 })
 export class PaylineComponent implements OnInit {
   @Input() public winningRows: number[];
   @Input() public totalRows: number;
-  public showLine: boolean = false;
+  public showLine = false;
 
   constructor() {
 
@@ -24,13 +24,13 @@ export class PaylineComponent implements OnInit {
 
   get svgPath(): string {
     const totalColumns = this.winningRows.length;
-    let path = "M"
+    let path = 'M';
     let x = Math.round((100 / totalColumns) / 2);
     let y = 0;
 
-    for (let row of this.winningRows) {
+    for (const row of this.winningRows) {
       if (y !== 0) {
-        path += " L"
+        path += ' L';
       }
 
       y = Math.round((100 * ((row + 1) / this.totalRows)) - ((100 / this.totalRows) / 2));

@@ -16,16 +16,16 @@ describe('AppComponent', () => {
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'slot-machine'`, () => {
+  it(`should have as title 'slot-library'`, () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('slot-machine');
+    expect(app.title).toEqual('slot-library');
   });
 
   it('should render title', () => {
     const fixture = TestBed.createComponent(AppComponent);
     fixture.detectChanges();
     const compiled = fixture.nativeElement;
-    expect(compiled.querySelector('.content span').textContent).toContain('slot-machine app is running!');
+    expect(compiled.querySelector('.content span').textContent).toContain('slot-library app is running!');
   });
 });

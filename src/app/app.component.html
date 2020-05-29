@@ -1,15 +1,1 @@
-<div id="slot-machine">
-  <div class="reel" *ngFor="let reel of reels">
-    <div *ngFor="let symbol of reel.symbols" [className]="'symbol ' + symbol.styleClass">
-      <img [className]="'symbol-image ' + (symbol.won ? 'symbol-image-won' : '')" [src]="symbol.picture" />
-    </div>
-    <div [className]="'reel-glass ' + (symbolsService.superLuckySpin ? 'reel-super-lucky ' : '') + (symbolsService.luckySpin ? 'reel-lucky' : '')"></div>
-  </div>
-  <div style="height: 100%; width: 100%; position: absolute">
-    <svg style="position: absolute" width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" app-payline *ngFor="let payline of paylineValues" [winningRows]="payline" [totalRows]="numberOfRows"></svg>
-  </div>
-</div>
-<div id="betting-section">
-  <button id="spin-button" (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : "Start"}}</button> 
-  <p id="winnings">{{winnings}}</p>
-</div>
+<lib-slot-machine></lib-slot-machine>

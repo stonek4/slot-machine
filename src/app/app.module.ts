@@ -1,16 +1,15 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-
+import { SlotMachineModule } from 'slot-machine';
 import { AppComponent } from './app.component';
-import { PaylineComponent } from './payline/payline.component';
 
 @NgModule({
   declarations: [
-    AppComponent,
-    PaylineComponent,
+    AppComponent
   ],
   imports: [
-    BrowserModule
+    BrowserModule,
+    SlotMachineModule
   ],
   providers: [],
   bootstrap: [AppComponent]

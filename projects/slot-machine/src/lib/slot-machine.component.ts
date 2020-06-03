@@ -20,7 +20,7 @@ export class SlotMachineComponent {
   stopIndex = 0;
   maxBetAmount = 1000;
   minimumBetAmount = 50;
-  betAmount = this.minimumBetAmount
+  betAmount = this.minimumBetAmount;
   paylineValues = paylines;
   winnings = 1000;
   stats = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];

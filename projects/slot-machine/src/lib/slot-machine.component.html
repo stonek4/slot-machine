@@ -10,6 +10,14 @@
     </div>
 </div>
 <div id="betting-section">
-    <button id="spin-button" [className]="spinning ? 'stop-button' : 'start-button'" (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : (this.stopping ? "" : "Start")}}</button> 
-    <p id="winnings-label">$</p><p id="winnings">{{getWinningsString()}}</p>
+    <button id="spin-button" [className]="spinning ? 'red-button' : 'green-button'" (click)="startStop()" [disabled]="this.stopping">{{spinning ? "Stop" : (this.stopping ? "" : "Start")}}</button> 
+    <p id="winnings-label">$</p><p id="winnings" class="value-box">{{getWinningsString()}}</p>
+    <div id="bet-picker">
+        <p id="bet-amount-label">Bet</p>
+        <div id="bet-amount-controls">
+            <button class="bet-picker-button green-button" (click)="increaseBet()">+</button>
+            <button class="bet-picker-button red-button" (click)="decreaseBet()">–</button>
+        </div>
+        <p id="bet-amount" class="value-box">{{betAmount}}</p>
+    </div>
 </div>

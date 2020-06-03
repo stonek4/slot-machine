@@ -18,6 +18,9 @@ export class SlotMachineComponent {
   spinning = false;
   stopping = false;
   stopIndex = 0;
+  maxBetAmount = 1000;
+  minimumBetAmount = 50;
+  betAmount = this.minimumBetAmount
   paylineValues = paylines;
   winnings = 1000;
   stats = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
@@ -66,6 +69,18 @@ export class SlotMachineComponent {
     });
   }
 
+  increaseBet() {
+    if (this.betAmount < this.maxBetAmount) {
+      this.betAmount += this.minimumBetAmount;
+    }
+  }
+
+  decreaseBet() {
+    if (this.betAmount > this.minimumBetAmount) {
+      this.betAmount -= this.minimumBetAmount;
+    }
+  }
+
   checkForWin() {
     let newWinnings = 0;
     for (const payline of this.paylineComponents) {
@@ -109,18 +124,20 @@ export class SlotMachineComponent {
         winningSymbol.won = true;
       }
     }
-    this.winnings += newWinnings;
+    this.winnings += newWinnings * (this.betAmount / this.minimumBetAmount);
   }
 
   takePayment() {
-    this.winnings -= 30;
+    this.winnings -= this.betAmount;
   }
 
   startStop(): void {
     if (this.spinning) {
-      this.stopIndex = 0;
-      this.stopping = true;
-      this.spinning = false;
+      setTimeout(() => {
+        this.stopIndex = 0;
+        this.stopping = true;
+        this.spinning = false;
+      }, 100);
     } else {
       this.takePayment();
       this.symbolsService.rollLuckySpin();

@@ -168,6 +168,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "slot-library"
+    }
+  },
+  "defaultProject": "slot-library",
+  "cli": {
+    "analytics": false
+  }
 }

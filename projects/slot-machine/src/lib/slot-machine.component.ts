@@ -125,6 +125,19 @@ export class SlotMachineComponent {
       }
     }
     this.winnings += newWinnings * (this.betAmount / this.minimumBetAmount);
+    if (jackpotSymbols >= 3) {
+      this.symbolsService.audio['xl-win'].play();
+    } else if (newWinnings > 0) {
+      if (newWinnings <= this.betAmount) {
+        this.symbolsService.audio['xs-win'].play();
+      } else if (newWinnings <= this.betAmount * 2) {
+        this.symbolsService.audio['sm-win'].play();
+      } else if (newWinnings <= this.betAmount * 4) {
+        this.symbolsService.audio['md-win'].play();
+      } else {
+        this.symbolsService.audio['lg-win'].play();
+      }
+    }
   }
 
   takePayment() {

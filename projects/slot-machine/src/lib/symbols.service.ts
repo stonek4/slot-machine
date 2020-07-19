@@ -10,6 +10,14 @@ export class SymbolsService {
   luckyCommonSymbolId = 0;
   luckyRareSymbolId = 4;
 
+  audio: object = {
+      "xs-win": new Audio('assets/aud/xs_win.mp3'),
+      "sm-win": new Audio('assets/aud/sm_win.mp3'),
+      "md-win": new Audio('assets/aud/md_win.mp3'),
+      "lg-win": new Audio('assets/aud/lg_win.mp3'),
+      "xl-win": new Audio('assets/aud/xl_win.mp3')
+  }
+
   symbols: object = {
       0: new SlotSymbol({
           id: '0',

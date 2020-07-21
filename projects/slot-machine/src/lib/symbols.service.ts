@@ -10,16 +10,6 @@ export class SymbolsService {
   luckyCommonSymbolId = 0;
   luckyRareSymbolId = 4;
 
-  audio: object = {
-      "xs-win": new Audio('assets/aud/xs-win.wav'),
-      "sm-win": new Audio('assets/aud/sm-win.wav'),
-      "ms-win": new Audio('assets/aud/ms-win.wav'),
-      "ml-win": new Audio('assets/aud/ml-win.wav'),
-      "lg-win": new Audio('assets/aud/lg-win.wav'),
-      "xl-win": new Audio('assets/aud/xl-win.wav'),
-      "jp-win": new Audio('assets/aud/jp-win.wav')
-  }
-
   symbols: object = {
       0: new SlotSymbol({
           id: '0',
@@ -67,7 +57,7 @@ export class SymbolsService {
           id: '7',
           styleClass: 'symbol-rare symbol-teal',
           picture: 'assets/img/beets.png',
-          value: 50,
+          value: 40,
       }),
       8: new SlotSymbol({
           id: '8',

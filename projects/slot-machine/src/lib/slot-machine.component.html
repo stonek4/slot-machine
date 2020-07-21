@@ -17,8 +17,8 @@
     <div id="bet-picker">
         <p id="bet-amount-label">Bet</p>
         <div id="bet-amount-controls">
-            <button class="bet-picker-button green-button" (click)="increaseBet()">+</button>
-            <button class="bet-picker-button red-button" (click)="decreaseBet()">–</button>
+            <button class="bet-picker-button green-button" (click)="increaseBet()" [disabled]="this.stopping && this.spinning">+</button>
+            <button class="bet-picker-button red-button" (click)="decreaseBet()" [disabled]="this.stopping || this.spinning">–</button>
         </div>
         <p id="bet-amount" class="value-box">{{betAmount}}</p>
     </div>

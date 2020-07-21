@@ -2,6 +2,7 @@ import { Component, ViewChildren, QueryList } from '@angular/core';
 import { PaylineComponent } from './payline/payline.component';
 import { paylines } from './paylines';
 import { SymbolsService, SlotSymbol } from './symbols.service';
+import { animationFrameScheduler } from 'rxjs';
 
 @Component({
   selector: 'lib-slot-machine',
@@ -33,9 +34,9 @@ export class SlotMachineComponent {
   // Maximum amount that can be bet
   maxBetAmount = 1000;
   // Minimum amount that can be bet
-  minimumBetAmount = 50;
+  minBetAmount = 50;
   // Current amount being bet
-  betAmount = this.minimumBetAmount;
+  betAmount = this.minBetAmount;
   // An array of paylines used to calculate wins
   paylineValues = paylines;
   // Current user winnings (start with 1000)
@@ -44,6 +45,16 @@ export class SlotMachineComponent {
   spinSpeed = 80;
   // An array of child payline components, each one representing a payline in the GUI
   @ViewChildren(PaylineComponent) paylineComponents: QueryList<PaylineComponent>;
+  // List of song options
+  audio: object = {
+      "xs-win": new Audio('assets/aud/xs-win.wav'),
+      "sm-win": new Audio('assets/aud/sm-win.wav'),
+      "ms-win": new Audio('assets/aud/ms-win.wav'),
+      "ml-win": new Audio('assets/aud/ml-win.wav'),
+      "lg-win": new Audio('assets/aud/lg-win.wav'),
+      "xl-win": new Audio('assets/aud/xl-win.wav'),
+      "jp-win": new Audio('assets/aud/jp-win.wav')
+  }
 
 
   /**
@@ -121,81 +132,145 @@ export class SlotMachineComponent {
     });
   }
 
+  /**
+   * Method called by the GUI to increase the bet as long
+   * as the betAmount doesn't exceed the maxBetAmount
+   */
   increaseBet() {
     if (this.betAmount < this.maxBetAmount) {
-      this.betAmount += this.minimumBetAmount;
+      this.betAmount += this.minBetAmount;
     }
   }
 
+  /**
+   * Method called by the GUI to decrease the bet as long
+   * as the betAmount doesn't fall below the minBetAmount
+   */
   decreaseBet() {
-    if (this.betAmount > this.minimumBetAmount) {
-      this.betAmount -= this.minimumBetAmount;
+    if (this.betAmount > this.minBetAmount) {
+      this.betAmount -= this.minBetAmount;
     }
   }
 
+  /**
+   * Method to determine whether or not the current spin
+   * is a win or not.
+   */
   checkForWin() {
+    // Amount that was won!
     let newWinnings = 0;
+    // Iterate through each payline, and check whether the path
+    // shows up on the reels.  In other words see all parts of
+    // the payline fall on the same symbols.
     for (const payline of this.paylineComponents) {
-      let symbol: SlotSymbol;
-      const winningSymbols = [];
-      for (let i = 0; i < this.numberOfReels; i++) {
+      // Get the first symbol that the payline falls on to compare to the rest
+      let symbolToMatch: SlotSymbol = this.reels[0].symbols[payline.winningRows[0]];
+      // Keep a list of the symbols that won
+      const winningSymbols = [symbolToMatch];
+      // Start on the second reel and check if each matches the first symbol
+      for (let i = 1; i < this.numberOfReels; i++) {
+        // Check that the payline falls on the same symbol for each reel
         const paylineIndex: number = payline.winningRows[i];
-        if (symbol === undefined) {
-          symbol = this.reels[i].symbols[paylineIndex];
-        } else if (symbol.id !== this.reels[i].symbols[paylineIndex].id) {
+        if (symbolToMatch.id !== this.reels[i].symbols[paylineIndex].id) {
+          // If not, break
           break;
         }
-
+        // Add each symbol to the list of winning symbols
         winningSymbols.push(this.reels[i].symbols[paylineIndex]);
-
+        // If we reach the last reel, all of the symbols must have matched
+        // therefore this spin is a win
         if (i === this.numberOfReels - 1) {
-          for (const winningSymbol of winningSymbols) {
-            winningSymbol.won = true;
-          }
-          payline.show();
-          setTimeout(() => {
-            payline.hide();
-          }, 5000);
-          newWinnings += (5 * symbol.value) + 3;
+          // Mark each symbol 
+          newWinnings += this.handlePaylineWin(winningSymbols, payline)
         }
       }
     }
-    let jackpotSymbols = 0;
+    // If 3 or more jackpot symbols appear, a jackpot is triggered...
+    // so here it's simply counting the number of jackpot symbols across
+    // all of the reels.
+    let jackpotSymbolsCount = 0;
     const winningJackpotSymbols = [];
     for (let i = 0; i < this.numberOfReels; i++) {
       for (let j = 0; j < this.numberOfRows; j++) {
         if (this.reels[i].symbols[j].id === '8') {
-          jackpotSymbols += 1;
+          jackpotSymbolsCount += 1;
           winningJackpotSymbols.push(this.reels[i].symbols[j]);
         }
       }
     }
-    if (jackpotSymbols >= 3) {
-      for (const winningSymbol of winningJackpotSymbols) {
-        winningSymbol.won = true;
-      }
+    // If there are 3 or more jackpot symbols, trigger a jackpot
+    if (jackpotSymbolsCount >= 3) {
+      this.playWinningAudio(undefined, true);
+      newWinnings += this.handleJackpotWin(winningJackpotSymbols);
+      this.winnings += newWinnings * (this.betAmount / this.minBetAmount);
+    } else {
+      // Otherwise add the new winnings and play a song if applicable
+      this.winnings += newWinnings * (this.betAmount / this.minBetAmount);
+      this.playWinningAudio(newWinnings);
     }
-    this.winnings += newWinnings * (this.betAmount / this.minimumBetAmount);
-    if (jackpotSymbols >= 3) {
-      this.symbolsService.audio['jp-win'].play();
+  }
+
+  /**
+   * Helper method that handles what happens win a certain payline wins
+   * @param winningSymbols - the list of symbols that won
+   * @param payline - the payline that won
+   * @returns {number} - the amount won from the payline
+   */
+  handlePaylineWin(winningSymbols: Array<SlotSymbol>, payline: PaylineComponent) {
+    // Mark each winning symbol as a winner, this will make the symbol animate in the GUI
+    for (const winningSymbol of winningSymbols) {
+      winningSymbol.won = true;
+    }
+    // Display the payline then hide it after 5 seconds
+    payline.show();
+    setTimeout(() => {
+      payline.hide();
+    }, 5000);
+    // Return the value of the win.
+    return (7 * winningSymbols[0].value) + 3;
+  }
+
+  /**
+   * Helper method that handles when a jackpot wins
+   * @param winningSymbols - the list of jackpot symbols that appeared
+   * @returns {number} - the amount won from the jackpot
+   */
+  handleJackpotWin(winningSymbols: Array<SlotSymbol>) {
+    for (const winningSymbol of winningSymbols) {
+      winningSymbol.won = true;
+    }
+    return (100 * winningSymbols[0].value);
+  }
+
+  /**
+   * Method to determine and play the appropriate win audio
+   * @param newWinnings - the amount that was won
+   * @param jackpot - whether the jackpot was won
+   */
+  playWinningAudio(newWinnings: number = 0, jackpot: boolean = false) {
+    if (jackpot) {
+      this.audio['jp-win'].play();
     } else if (newWinnings > 0) {
       console.log(newWinnings);
       if (newWinnings <= this.betAmount) {
-        this.symbolsService.audio['xs-win'].play();
+        this.audio['xs-win'].play();
       } else if (newWinnings <= this.betAmount * 2) {
-        this.symbolsService.audio['sm-win'].play();
+        this.audio['sm-win'].play();
       } else if (newWinnings <= this.betAmount * 4) {
-        this.symbolsService.audio['ms-win'].play();
+        this.audio['ms-win'].play();
       } else if (newWinnings <= this.betAmount * 8) {
-        this.symbolsService.audio['ml-win'].play();
+        this.audio['ml-win'].play();
       } else if (newWinnings <= this.betAmount * 16) {
-        this.symbolsService.audio['lg-win'].play();
+        this.audio['lg-win'].play();
       } else {
-        this.symbolsService.audio['xl-win'].play();
+        this.audio['xl-win'].play();
       }
     }
   }
 
+  /**
+   * Very simple method to subtract the payment for each spin
+   */
   takePayment() {
     this.winnings -= this.betAmount;
   }

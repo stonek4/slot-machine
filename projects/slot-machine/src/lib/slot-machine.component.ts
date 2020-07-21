@@ -40,6 +40,8 @@ export class SlotMachineComponent {
   paylineValues = paylines;
   // Current user winnings (start with 1000)
   winnings = 1000;
+  // Spinning speed in ms (must match css)
+  spinSpeed = 80;
   // An array of child payline components, each one representing a payline in the GUI
   @ViewChildren(PaylineComponent) paylineComponents: QueryList<PaylineComponent>;
 
@@ -82,28 +84,38 @@ export class SlotMachineComponent {
    */
   spin(reel: Reel): void {
     // Waiting for an animation frame to make spinning smoother
+    // FIXME: optimize adding in new symbols and "spinning" the reels
     const frame = window.requestAnimationFrame(() => {
+      // remove the last symbol
       reel.symbols.pop();
+      // insert a new symbol to the front of the array, 
+      // bindings will cause a new DOM symbol to be created
       reel.symbols.unshift(this.symbolsService.getNewSymbol());
-      window.cancelAnimationFrame(frame);
+
+      // If the slot machine is still spinning
       if (this.spinning) {
         setTimeout(() => {
           this.spin(reel);
-        }, 80);
+        }, this.spinSpeed);
+      // If the slot machine has stopped spinning
       } else {
+        // This checks if the stop index matches the current
+        // reel and if so stops the reel.  This gives the effect
+        // of one reel stopping at a time.
         if (this.stopIndex === reel.column) {
           setTimeout(() => {
             this.stopIndex += 1;
           }, 200);
-
+          // If the last reel is stopped, calculate whether a win has happened
           if (this.stopIndex === this.numberOfReels - 1) {
             this.checkForWin();
             this.stopping = false;
           }
+        // If the reel hasn't hit its stop index, continue spinning it
         } else {
           setTimeout(() => {
             this.spin(reel);
-          }, 80);
+          }, this.spinSpeed);
         }
       }
     });
@@ -165,16 +177,21 @@ export class SlotMachineComponent {
     }
     this.winnings += newWinnings * (this.betAmount / this.minimumBetAmount);
     if (jackpotSymbols >= 3) {
-      this.symbolsService.audio['xl-win'].play();
+      this.symbolsService.audio['jp-win'].play();
     } else if (newWinnings > 0) {
+      console.log(newWinnings);
       if (newWinnings <= this.betAmount) {
         this.symbolsService.audio['xs-win'].play();
       } else if (newWinnings <= this.betAmount * 2) {
         this.symbolsService.audio['sm-win'].play();
       } else if (newWinnings <= this.betAmount * 4) {
-        this.symbolsService.audio['md-win'].play();
-      } else {
+        this.symbolsService.audio['ms-win'].play();
+      } else if (newWinnings <= this.betAmount * 8) {
+        this.symbolsService.audio['ml-win'].play();
+      } else if (newWinnings <= this.betAmount * 16) {
         this.symbolsService.audio['lg-win'].play();
+      } else {
+        this.symbolsService.audio['xl-win'].play();
       }
     }
   }

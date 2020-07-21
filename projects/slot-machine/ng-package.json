@@ -3,7 +3,7 @@
   "dest": "../../dist/slot-machine",
   "assets": [
     "./assets/img/*.png",
-    "./assets/aud/*.mp3"
+    "./assets/aud/*.wav"
   ],
   "lib": {
     "entryFile": "src/public-api.ts"

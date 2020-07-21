@@ -198,17 +198,12 @@ $number-of-rows: 5;
 }
 
 .symbol {
+    will-change: height;
     width: 100%;
     height: calc((50vw - (2 * #{$slot-column-margin})) / #{$number-of-rows});
     max-height: calc((80vh - (2 * #{$slot-column-margin})) / #{$number-of-rows});
     position: relative;
     float: left;
-    // border-color: grey;
-    // border-width: 2px;
-    // border-style: solid;
-    // border-left-style: none;
-    // border-right-style: none;
-    // box-sizing: border-box;
     animation: insert-symbol 0.080s linear;
     overflow: hidden;
 }

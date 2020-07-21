@@ -11,11 +11,13 @@ export class SymbolsService {
   luckyRareSymbolId = 4;
 
   audio: object = {
-      "xs-win": new Audio('assets/aud/xs_win.mp3'),
-      "sm-win": new Audio('assets/aud/sm_win.mp3'),
-      "md-win": new Audio('assets/aud/md_win.mp3'),
-      "lg-win": new Audio('assets/aud/lg_win.mp3'),
-      "xl-win": new Audio('assets/aud/xl_win.mp3')
+      "xs-win": new Audio('assets/aud/xs-win.wav'),
+      "sm-win": new Audio('assets/aud/sm-win.wav'),
+      "ms-win": new Audio('assets/aud/ms-win.wav'),
+      "ml-win": new Audio('assets/aud/ml-win.wav'),
+      "lg-win": new Audio('assets/aud/lg-win.wav'),
+      "xl-win": new Audio('assets/aud/xl-win.wav'),
+      "jp-win": new Audio('assets/aud/jp-win.wav')
   }
 
   symbols: object = {
@@ -83,7 +85,6 @@ export class SymbolsService {
 
   rollLuckySpin(): void {
     const random: number = this.getRandomNumber();
-    console.log(random);
     if (random < 5) {
       this.luckySpin = true;
     } else {

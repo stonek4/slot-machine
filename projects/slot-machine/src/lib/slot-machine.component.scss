@@ -259,11 +259,6 @@ $number-of-rows: 5;
     animation: spin 2s linear infinite;
 }
 
-.new-symbol {
-    @extend .symbol;
-    animation: insert-symbol 0.080s;
-}
-
 @keyframes insert-symbol {
     0% {
         height: 0vw;

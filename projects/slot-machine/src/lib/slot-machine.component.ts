@@ -8,31 +8,57 @@ import { SymbolsService, SlotSymbol } from './symbols.service';
   templateUrl: './slot-machine.component.html',
   styleUrls: ['./slot-machine.component.scss']
 })
+
+/**
+ * @class a class representing a slot machine
+ */
 export class SlotMachineComponent {
-
+  // Name of the slot machine DOM object
   title = 'slot-machine';
+  // Number of slot machine reels
   numberOfReels = 5;
+  // Number of slot machine rows
   numberOfRows = 5;
+  // Number of physical symbols per reel at any given time
   numberOfSymbols = this.numberOfRows + 1;
+  // An array of slot machine reels
   reels = new Array<Reel>();
+  // Whether or not the slot machine is currently spinning
   spinning = false;
+  // Whether or not the slot machine is in the process of stopping
   stopping = false;
+  // An index to keep track of which reel is next to stop where 0 is the first reel
+  // and this.numberOfReels - 1 is the last reel
   stopIndex = 0;
+  // Maximum amount that can be bet
   maxBetAmount = 1000;
+  // Minimum amount that can be bet
   minimumBetAmount = 50;
+  // Current amount being bet
   betAmount = this.minimumBetAmount;
+  // An array of paylines used to calculate wins
   paylineValues = paylines;
+  // Current user winnings (start with 1000)
   winnings = 1000;
-  stats = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
+  // An array of child payline components, each one representing a payline in the GUI
   @ViewChildren(PaylineComponent) paylineComponents: QueryList<PaylineComponent>;
 
+
+  /**
+   * Constructor creates the slot machine reels, and adds
+   * symbols to them to begin with.
+   * @param symbolsService - a singleton service controlling
+   * the allowed symbols for the slot machine
+   */
   constructor(public symbolsService: SymbolsService) {
+    // Generate each reel
     for (let i = 0; i < this.numberOfReels; i++) {
+      // Generate the symbols for each reel
       const symbols = new Array<SlotSymbol>();
       for (let j = 0; j < this.numberOfSymbols; j++) {
         symbols.push(this.symbolsService.getNewSymbol());
       }
+      // Add the reel to the list of all reels
       this.reels.push(new Reel({
         symbols,
         column: i
@@ -40,32 +66,46 @@ export class SlotMachineComponent {
     }
   }
 
+  /**
+   * Simple method to get a "0" padded string to display
+   * the winnings in the GUI
+   * @returns {string} a zero padded string of the current user winnings
+   */
   getWinningsString(): string {
      return ('0000000' + this.winnings).slice(-7);
   }
 
+  /**
+   * Method to spin a reel and generate new
+   * symbols for it
+   * @param reel - the reel to begin spinning
+   */
   spin(reel: Reel): void {
-    window.requestAnimationFrame(() => {
-      setTimeout(() => {
-        reel.symbols.pop();
-        reel.symbols.unshift(this.symbolsService.getNewSymbol());
-        if (this.spinning) {
+    // Waiting for an animation frame to make spinning smoother
+    const frame = window.requestAnimationFrame(() => {
+      reel.symbols.pop();
+      reel.symbols.unshift(this.symbolsService.getNewSymbol());
+      window.cancelAnimationFrame(frame);
+      if (this.spinning) {
+        setTimeout(() => {
           this.spin(reel);
-        } else {
-          if (this.stopIndex === reel.column) {
-            setTimeout(() => {
-              this.stopIndex += 1;
-            }, 200);
+        }, 80);
+      } else {
+        if (this.stopIndex === reel.column) {
+          setTimeout(() => {
+            this.stopIndex += 1;
+          }, 200);
 
-            if (this.stopIndex === this.numberOfReels - 1) {
-              this.checkForWin();
-              this.stopping = false;
-            }
-          } else {
-            this.spin(reel);
+          if (this.stopIndex === this.numberOfReels - 1) {
+            this.checkForWin();
+            this.stopping = false;
           }
+        } else {
+          setTimeout(() => {
+            this.spin(reel);
+          }, 80);
         }
-      }, 80);
+      }
     });
   }
 
@@ -100,7 +140,6 @@ export class SlotMachineComponent {
           for (const winningSymbol of winningSymbols) {
             winningSymbol.won = true;
           }
-          this.stats[parseInt(symbol.id, 10)] += 1;
           payline.show();
           setTimeout(() => {
             payline.hide();
@@ -162,7 +201,6 @@ export class SlotMachineComponent {
           this.spin(reel);
         }
         this.spinning = true;
-        this.stats[8] += 1;
       });
     }
   }

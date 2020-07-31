@@ -2,7 +2,6 @@ import { Component, ViewChildren, QueryList } from '@angular/core';
 import { PaylineComponent } from './payline/payline.component';
 import { paylines } from './paylines';
 import { SymbolsService, SlotSymbol } from './symbols.service';
-import { animationFrameScheduler } from 'rxjs';
 
 @Component({
   selector: 'lib-slot-machine',
@@ -275,34 +274,70 @@ export class SlotMachineComponent {
     this.winnings -= this.betAmount;
   }
 
+  /**
+   * Method to toggle whether the wheel is spinning or not
+   */
   startStop(): void {
     if (this.spinning) {
-      setTimeout(() => {
-        this.stopIndex = 0;
-        this.stopping = true;
-        this.spinning = false;
-      }, 100);
+      this.stopSpinning();
     } else {
-      this.takePayment();
-      this.symbolsService.rollLuckySpin();
-      for (const payline of this.paylineComponents) {
-        payline.hide();
-      }
-      setTimeout(() => {
-        for (const reel of this.reels) {
-          this.spin(reel);
-        }
-        this.spinning = true;
-      });
+      this.startSpinning();
     }
   }
+
+  /**
+   * Method to start spinning the wheel
+   */
+  startSpinning(): void {
+    // Take the payment from the user
+    this.takePayment();
+    // Determine whether the current spin will be lucky or not
+    this.symbolsService.rollLuckySpin();
+    // Hide all of the paylines (in case the spin happens before they disappear on their own)
+    for (const payline of this.paylineComponents) {
+      payline.hide();
+    }
+    setTimeout(() => {
+      // One at a time start spinning each reel
+      for (const reel of this.reels) {
+        this.spin(reel);
+      }
+      // Once all reels have started spinning, mark spinning as true
+      this.spinning = true;
+    });
+  }
+
+  /**
+   * A method to stop the wheel from spinning
+   */
+  stopSpinning(): void {
+    setTimeout(() => {
+      // Sets the index of the wheel to stop back to 0
+      this.stopIndex = 0;
+      // Sets the flag to begin stopping the reels
+      this.stopping = true;
+      // Turn spinning to false
+      this.spinning = false;
+    }, 100);
+  }
+
 }
 
+/**
+ * @class a class representing a reel on a slot machine
+ */
 class Reel {
+  // A list of slot machine symbols on the reel
   public symbols: SlotSymbol[];
+  // A number of the slot machine column (0 = farthest left)
   public column: number;
 
+  /**
+   * Accepts fields to initialize the reel with and sets them
+   * @param data - symbols / column of the reel
+   */
   constructor(data: Partial<Reel>){
+    // Allow fields to be passed into the constructor
     Object.assign(this, data);
   }
 }

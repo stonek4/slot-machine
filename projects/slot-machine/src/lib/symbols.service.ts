@@ -105,7 +105,7 @@ export class SymbolsService {
    */
   rollLuckySpin(): void {
     const random: number = this.getRandomNumber();
-    if (random < 5) {
+    if (random < 8) {
       this.luckySpin = true;
     } else {
       this.luckySpin = false;

@@ -187,13 +187,27 @@ $number-of-rows: 5;
     border-width: $slot-column-margin;
 }
 
+.reel-background {
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-position: 50% 10%; 
+    background-size: 50%;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+}
+
 .reel-lucky {
     @extend .reel-border;
+    @extend .reel-background;
+    background-image: url('assets/img/rain.png');
     animation: flash-silver 2s linear infinite;
 }
 
 .reel-super-lucky {
     @extend .reel-border;
+    @extend .reel-background;
+    background-image: url('assets/img/thunderstorm.png');
     animation: flash-gold 2s linear infinite;
 }
 
@@ -266,24 +280,42 @@ $number-of-rows: 5;
 @keyframes flash-silver {
     0% {
         border-color: rgba(0,0,0,0);
+        opacity: 0;
+    }
+    25% {
+        border-color: silver
     }
     50% {
+        border-color: rgba(0,0,0,0);
+        opacity: 0.9;
+    }
+    75% {
         border-color: silver;
     }
     100% {
         border-color: rgba(0,0,0,0);
+        opacity: 0;
     }
 }
 
 @keyframes flash-gold {
     0% {
         border-color: rgba(0,0,0,0);
+        opacity: 0;
+    }
+    25% {
+        border-color: gold
     }
     50% {
+        border-color: rgba(0,0,0,0);
+        opacity: 0.9;
+    }
+    75% {
         border-color: gold;
     }
     100% {
         border-color: rgba(0,0,0,0);
+        opacity: 0;
     }
 }
 

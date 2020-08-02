@@ -30,37 +30,37 @@ export class SymbolsService {
           id: '0',
           styleClass: 'symbol-common',
           picture: 'assets/img/jack.png',
-          value: 1,
+          value: 2,
       }),
       1: new SlotSymbol({
           id: '1',
           styleClass: 'symbol-common',
           picture: 'assets/img/queen.png',
-          value: 2,
+          value: 4,
       }),
       2: new SlotSymbol({
           id: '2',
           styleClass: 'symbol-common',
           picture: 'assets/img/king.png',
-          value: 3,
+          value: 6,
       }),
       3: new SlotSymbol({
           id: '3',
           styleClass: 'symbol-common',
           picture: 'assets/img/ace.png',
-          value: 4,
+          value: 8,
       }),
       4: new SlotSymbol({
           id: '4',
           styleClass: 'symbol-rare symbol-yellow',
           picture: 'assets/img/potato.png',
-          value: 5,
+          value: 10,
       }),
       5: new SlotSymbol({
           id: '5',
           styleClass: 'symbol-rare symbol-orange',
           picture: 'assets/img/carrot.png',
-          value: 10,
+          value: 15,
       }),
       6: new SlotSymbol({
           id: '6',
@@ -72,13 +72,13 @@ export class SymbolsService {
           id: '7',
           styleClass: 'symbol-rare symbol-teal',
           picture: 'assets/img/beets.png',
-          value: 40,
+          value: 25,
       }),
       8: new SlotSymbol({
           id: '8',
           styleClass: 'symbol-jackpot symbol-rainbow',
           picture: 'assets/img/onion.png',
-          value: 100,
+          value: 50,
       })
   };
 
@@ -105,7 +105,7 @@ export class SymbolsService {
    */
   rollLuckySpin(): void {
     const random: number = this.getRandomNumber();
-    if (random < 8) {
+    if (random < 7) {
       this.luckySpin = true;
     } else {
       this.luckySpin = false;

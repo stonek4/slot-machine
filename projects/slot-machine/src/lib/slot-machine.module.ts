@@ -2,11 +2,13 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { SlotMachineComponent } from './slot-machine.component';
 import { PaylineComponent } from './payline/payline.component';
+import { JackpotComponent } from './jackpot/jackpot.component';
 
 @NgModule({
   declarations: [
     SlotMachineComponent,
-    PaylineComponent
+    PaylineComponent,
+    JackpotComponent
   ],
   imports: [
     BrowserModule
